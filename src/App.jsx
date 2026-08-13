@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import Header from './components/layout/Header';
+import Render from './Render.jsx';
 
 function App() {
-  return <h1>Hello World</h1>;
+  return (
+    <>
+      <Header />
+      <Render />
+    </>
+  );
 }
 
 export default App;

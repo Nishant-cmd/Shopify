@@ -1,0 +1,26 @@
+header {
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: 95%;
+    box-shadow: var(--shadow-sm);
+    z-index: 1000;
+    /* background: 0 0;      can be removed ?     */
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    margin: 1rem auto;
+    padding: 1rem;
+    display: flex;
+    position: sticky;
+}
+
+ul {
+    display: flex;
+    gap: 1rem;
+}
+
+.link:hover {
+    color: var(--accent);
+    background-color: var(--accent-soft);
+}

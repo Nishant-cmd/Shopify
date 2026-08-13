@@ -1,0 +1,67 @@
+@import '../../node_modules/modern-normalize/modern-normalize.css';
+/* @import 'modern-normalize'; */
+
+:root {
+    line-height: 1.5;
+    --bg-main: #f5f5f5;
+    --bg-navbar: #ffffffe0;
+    --bg-secondary: #ffffff8c;
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --accent-soft: #eef2ff;
+    --danger: #dc2626;
+    --danger-soft: #ef44441f;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --border-color-secondary: #ffffff73;
+    --shadow-sm: 0 4px 12px #0000000f;
+    --shadow-md: 0 8px 24px #6366f126;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --transition-all: all .25s ease;
+    --transition-transform: transform .3s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-family: Inter, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+figure,
+p,
+ol,
+ul {
+    margin: 0;
+}
+
+ol[role="list"],
+ul[role="list"],
+li {
+    list-style: none;
+    padding-inline: 0;
+}
+
+img {
+    display: block;
+    max-inline-size: 100%;
+}
