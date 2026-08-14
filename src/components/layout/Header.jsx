@@ -30,6 +30,11 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   padding: 0.55rem 0.8rem;
   border-radius: 10px;
+
+  &:hover {
+    color: var(--accent);
+    background-color: var(--accent-soft);
+  }
 `;
 
 export default function Navigation() {
