@@ -1,11 +1,13 @@
+import { Outlet } from 'react-router';
 import Header from './components/layout/Header';
-import Render from './Render.jsx';
 
 function App() {
   return (
     <>
       <Header />
-      <Render />
+      <main>
+        <Outlet />
+      </main>
     </>
   );
 }

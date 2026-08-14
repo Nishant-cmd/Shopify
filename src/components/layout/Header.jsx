@@ -1,42 +1,56 @@
 import { Link } from 'react-router';
 import { ShoppingCart } from 'lucide-react';
-import styles from '../../styles/header.module.css';
 import { useState } from 'react';
+import styled from 'styled-components';
+
+const Header = styled.header`
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: 95%;
+  box-shadow: var(--shadow-sm);
+  z-index: 1000;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  padding: 1rem;
+  display: flex;
+  position: sticky;
+`;
+
+const NavigationContainer = styled.nav`
+  display: flex;
+  gap: 1rem;
+`;
+const StyledLink = styled(Link)`
+  background-color: ${(props) => (props.$active ? ' var(--accent)' : 'transparent')};
+  color: ${(props) => (props.$active ? ' var(--bg-main)' : 'var(--text-secondary)')};
+  box-shadow: ${(props) => (props.$active ? ' var(--shadow-md)' : 'none')};
+  text-decoration: none;
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+`;
 
 export default function Navigation() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const pages = ['home', 'shop', 'cart'];
+  const [active, setActive] = useState(0);
   return (
-    <header className={styles.header}>
+    <Header>
       <h3>Shopify</h3>
-      <nav>
-        <ul role="list">
-          {pages.map((page, index) => (
-            <li key={index}>
-              <Link
-                to={page}
-                className={styles.link}
-                onClick={() => setActiveIndex(index)}
-                style={{
-                  backgroundColor: activeIndex === index ? '#6366f1' : 'none',
-                  color: activeIndex === index ? '#ffffff' : '#6b7280',
-                  boxShadow: activeIndex === index ? ' 0 8px 24px' : '0',
-                  textDecoration: 'none',
-                  padding: '.55rem .8rem',
-                  borderRadius: '10px',
-                }}
-              >
-                {page.charAt(0).toUpperCase() + page.slice(1)}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <nav>
-        <Link to="Cart">
-          <ShoppingCart />
-        </Link>
-      </nav>
-    </header>
+      <NavigationContainer>
+        <StyledLink $active={active === 0} onClick={() => setActive(0)} to="/home">
+          Home
+        </StyledLink>
+        <StyledLink $active={active === 1} onClick={() => setActive(1)} to="/shop">
+          Shop
+        </StyledLink>
+        <StyledLink $active={active === 2} onClick={() => setActive(2)} to="/cart">
+          Cart
+        </StyledLink>
+      </NavigationContainer>
+      <Link to="/cart">
+        <ShoppingCart />
+      </Link>
+    </Header>
   );
 }
