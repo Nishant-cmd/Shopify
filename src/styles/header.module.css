@@ -1,0 +1,33 @@
+.header {
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: 95%;
+    box-shadow: var(--shadow-sm);
+    z-index: 1000;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem auto;
+    padding: 0.8rem;
+    display: flex;
+    position: sticky;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+}
+
+
+.link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 10px;
+}
+
+.link:hover {
+    color: var(--accent);
+    background-color: var(--accent-soft);
+}
