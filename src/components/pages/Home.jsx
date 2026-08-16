@@ -47,7 +47,7 @@ export default function Home() {
         <h5>Categories</h5>
         <p>Browse Popular Categories</p>
         <nav className={styles.categories_link}>
-          <NavLink className={styles.link} to="/shop">
+          <NavLink className={styles.link} to="/shop/electronics">
             <div>
               <p>Electronics</p>
               <p>Latest gadgets and smart devices.</p>
@@ -57,7 +57,7 @@ export default function Home() {
             </div>
           </NavLink>
 
-          <NavLink className={styles.link} to="/shop">
+          <NavLink className={styles.link} to="/shop/mens">
             <div>
               <p>Men's Fashion</p>
               <p>Modern outfits for everyday style.</p>
@@ -68,7 +68,7 @@ export default function Home() {
             </div>
           </NavLink>
 
-          <NavLink className={styles.link} to="/shop">
+          <NavLink className={styles.link} to="/shop/women">
             <div>
               <p>Women's Fashion</p>
               <p>Elegant and trendy collections.</p>
@@ -78,7 +78,7 @@ export default function Home() {
             </div>
           </NavLink>
 
-          <NavLink className={styles.link} to="/shop">
+          <NavLink className={styles.link} to="/shop/jewelery">
             <div>
               <p>Jewelry</p>
               <p>Luxury accessories and essentials.</p>

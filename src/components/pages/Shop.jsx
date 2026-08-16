@@ -1,13 +1,32 @@
 import { NavLink } from 'react-router';
 import styles from '../../styles/shop.module.css';
+import useAllData from '../../services/products';
+import { Outlet } from 'react-router';
+import { useState } from 'react';
 
 export default function Shop() {
+  const { data, loading, error } = useAllData();
+
+  if (loading) {
+    return <div>Loading....</div>;
+  } else if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <main className={styles.main}>
       <Categories />
       <section className={styles.section}>
         <CategoryTitle />
-        <ShowProducts />
+        <main
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))',
+            gap: '1.5rem',
+          }}
+        >
+          <Outlet context={data} />
+        </main>
       </section>
     </main>
   );
@@ -19,7 +38,7 @@ function Categories() {
       <h4>Categories</h4>
       <nav className={styles.nav}>
         <NavLink
-          to="/shop/all"
+          to="all"
           className={styles.link}
           style={({ isActive }) => {
             return {
@@ -31,7 +50,7 @@ function Categories() {
           All Products
         </NavLink>
         <NavLink
-          to="/shop/electronics"
+          to="electronics"
           className={styles.link}
           style={({ isActive }) => {
             return {
@@ -43,7 +62,7 @@ function Categories() {
           Electronics
         </NavLink>
         <NavLink
-          to="/shop/mens"
+          to="mens"
           className={styles.link}
           style={({ isActive }) => {
             return {
@@ -55,7 +74,7 @@ function Categories() {
           Men's Clothing
         </NavLink>
         <NavLink
-          to="/shop/women"
+          to="women"
           className={styles.link}
           style={({ isActive }) => {
             return {
@@ -67,7 +86,7 @@ function Categories() {
           Women's Clothing
         </NavLink>
         <NavLink
-          to="/shop/jewelery"
+          to="jewelery"
           className={styles.link}
           style={({ isActive }) => {
             return {
@@ -85,12 +104,8 @@ function Categories() {
 function CategoryTitle() {
   return (
     <header className={styles.header}>
-      <h3>Men's Clothing</h3>
-      <p>4 Products</p>
+      <h3>All Products</h3>
+      <p>20 products</p>
     </header>
   );
-}
-
-function ShowProducts() {
-  return <div>This will show product details</div>;
 }
