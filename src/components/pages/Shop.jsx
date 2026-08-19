@@ -2,7 +2,6 @@ import { NavLink } from 'react-router';
 import styles from '../../styles/shop.module.css';
 import useAllData from '../../services/products';
 import { Outlet } from 'react-router';
-import { useState } from 'react';
 
 export default function Shop() {
   const { data, loading, error } = useAllData();

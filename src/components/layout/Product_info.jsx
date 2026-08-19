@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styles from '../../styles/product_info.module.css';
+import { useCart } from '../pages/Cart';
+
+const cartProducts = [];
 
 export default function ProductInfo({ productDetails }) {
   const [addCart, setAddCart] = useState(false);
+  const productCount = useRef(1);
 
   return (
     <div className={styles.product}>
@@ -14,27 +18,69 @@ export default function ProductInfo({ productDetails }) {
         <p className={styles.details}>{productDetails.title}</p>
         <div className={styles.inputDiv}>
           <span>{'$' + productDetails.price}</span>
-          {addCart ? (
-            <Input setAddCart={setAddCart} />
-          ) : (
-            <button className={styles.addCartButton} type="button" onClick={() => setAddCart(true)}>
-              Add to cart
-            </button>
-          )}
+
+          <Input
+            productCount={productCount.current}
+            addCart={addCart}
+            setAddCart={setAddCart}
+            productDetails={productDetails}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-function Input({ setAddCart }) {
-  const [quantity, setQuantity] = useState(1);
+function Input({ productCount, addCart, setAddCart, productDetails }) {
+  const [quantity, setQuantity] = useState(productCount);
+  const { addInCart } = useCart();
+
   const handleChange = (event) => {
-    if (Number(quantity) >= 1) {
+    if (event.target.value > 0) {
       setQuantity(event.target.value);
     } else {
       setAddCart(false);
     }
   };
-  return <input className={styles.input} type="number" value={quantity} onChange={handleChange} />;
+
+  const iterateProduct = (productDetails, quantity) => {
+    const productIndex = cartProducts.findIndex(
+      (product) => product.productUrl.id === productDetails.id,
+    );
+
+    if (productIndex !== -1) {
+      cartProducts[productIndex].productQuantity = quantity;
+      return;
+    }
+
+    const productInfo = {
+      productUrl: productDetails,
+      productQuantity: quantity,
+    };
+    cartProducts.push(productInfo);
+  };
+
+  const onClick = () => {
+    iterateProduct(productDetails, quantity);
+    productCount = quantity;
+    addInCart(cartProducts);
+    setAddCart(false);
+  };
+
+  return (
+    <>
+      {addCart ? (
+        <div>
+          <button className={styles.addCartButton} type="button" onClick={onClick}>
+            Save items
+          </button>
+          <input className={styles.input} type="number" value={quantity} onChange={handleChange} />
+        </div>
+      ) : (
+        <button className={styles.addCartButton} type="button" onClick={() => setAddCart(true)}>
+          Add to Cart
+        </button>
+      )}
+    </>
+  );
 }
