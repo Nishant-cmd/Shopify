@@ -1,12 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import styles from '../../styles/product_info.module.css';
-import { useCart } from '../pages/Cart';
 
-const cartProducts = [];
-
-export default function ProductInfo({ productDetails }) {
+export default function ProductInfo({ productDetails, addToCart }) {
   const [addCart, setAddCart] = useState(false);
-  const productCount = useRef(1);
 
   return (
     <div className={styles.product}>
@@ -20,10 +16,10 @@ export default function ProductInfo({ productDetails }) {
           <span>{'$' + productDetails.price}</span>
 
           <Input
-            productCount={productCount.current}
             addCart={addCart}
             setAddCart={setAddCart}
             productDetails={productDetails}
+            addToCart={addToCart}
           />
         </div>
       </div>
@@ -31,53 +27,70 @@ export default function ProductInfo({ productDetails }) {
   );
 }
 
-function Input({ productCount, addCart, setAddCart, productDetails }) {
-  const [quantity, setQuantity] = useState(productCount);
-  const { addInCart } = useCart();
+function Input({ addCart, setAddCart, productDetails, addToCart }) {
+  const [quantity, setQuantity] = useState(1);
 
   const handleChange = (event) => {
-    if (event.target.value > 0) {
-      setQuantity(event.target.value);
+    const quantity = Number(event.target.value);
+
+    if (quantity > 0) {
+      addProduct(productDetails, quantity);
+      setQuantity(quantity);
+      setAddCart(true);
     } else {
+      removeFromCart(productDetails.id);
       setAddCart(false);
     }
   };
 
-  const iterateProduct = (productDetails, quantity) => {
-    const productIndex = cartProducts.findIndex(
-      (product) => product.productUrl.id === productDetails.id,
-    );
+  const addProduct = (productDetails, quantity) => {
+    addToCart((prevCart) => {
+      const productIndex = prevCart.findIndex(
+        (product) => product.productUrl.id === productDetails.id,
+      );
 
-    if (productIndex !== -1) {
-      cartProducts[productIndex].productQuantity = quantity;
-      return;
-    }
+      // Product already exists
+      if (productIndex !== -1) {
+        return prevCart.map((product, index) =>
+          index === productIndex
+            ? {
+                ...product,
+                productQuantity: quantity,
+              }
+            : product,
+        );
+      }
 
-    const productInfo = {
-      productUrl: productDetails,
-      productQuantity: quantity,
-    };
-    cartProducts.push(productInfo);
+      // Product doesn't exist
+      return [
+        ...prevCart,
+        {
+          productUrl: productDetails,
+          productQuantity: quantity,
+        },
+      ];
+    });
   };
 
-  const onClick = () => {
-    iterateProduct(productDetails, quantity);
-    productCount = quantity;
-    addInCart(cartProducts);
-    setAddCart(false);
+  const removeFromCart = (productId) => {
+    addToCart((prevCart) => prevCart.filter((product) => product.productUrl.id !== productId));
   };
 
   return (
     <>
       {addCart ? (
         <div>
-          <button className={styles.addCartButton} type="button" onClick={onClick}>
-            Save items
-          </button>
           <input className={styles.input} type="number" value={quantity} onChange={handleChange} />
         </div>
       ) : (
-        <button className={styles.addCartButton} type="button" onClick={() => setAddCart(true)}>
+        <button
+          className={styles.addCartButton}
+          type="button"
+          onClick={() => {
+            setAddCart(true);
+            addProduct(productDetails, quantity);
+          }}
+        >
           Add to Cart
         </button>
       )}

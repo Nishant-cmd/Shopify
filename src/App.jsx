@@ -3,13 +3,12 @@ import Header from './components/layout/Header';
 import { useState } from 'react';
 
 function App() {
-  const [cart, addCart] = useState(null);
-
+  const [cart, addToCart] = useState([]);
   return (
     <>
-      <Header />
+      <Header cart={cart} />
       <main>
-        <Outlet context={{ cart, addCart }} />
+        <Outlet context={{ cart, addToCart }} />
       </main>
     </>
   );

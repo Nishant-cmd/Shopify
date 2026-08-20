@@ -2,7 +2,7 @@ import { NavLink } from 'react-router';
 import { ShoppingCart } from 'lucide-react';
 import styles from '../../styles/header.module.css';
 
-export default function Navigation() {
+export default function Navigation({ cart }) {
   return (
     <header className={styles.header}>
       <h3>Shopify</h3>
@@ -44,11 +44,22 @@ export default function Navigation() {
           Cart
         </NavLink>
       </nav>
-      <nav>
-        <NavLink to="/cart">
-          <ShoppingCart />
-        </NavLink>
-      </nav>
+      <ShowCartValue cart={cart} />
     </header>
+  );
+}
+function ShowCartValue({ cart }) {
+  const totalProducts = cart.reduce((previous, current) => {
+    return previous + current.productQuantity;
+  }, 0);
+  return (
+    <nav>
+      <NavLink to="/cart" className={styles.cartIconLink}>
+        <ShoppingCart size={22} />
+        {totalProducts > 0 && (
+          <span className={styles.badge}>{totalProducts}</span>
+        )}
+      </NavLink>
+    </nav>
   );
 }

@@ -1,10 +1,11 @@
-import { NavLink } from 'react-router';
+import { NavLink, useOutletContext } from 'react-router';
 import styles from '../../styles/shop.module.css';
 import useAllData from '../../services/products';
 import { Outlet } from 'react-router';
 
 export default function Shop() {
   const { data, loading, error } = useAllData();
+  const { addToCart } = useOutletContext();
 
   if (loading) {
     return <div>Loading....</div>;
@@ -24,7 +25,7 @@ export default function Shop() {
             gap: '1.5rem',
           }}
         >
-          <Outlet context={data} />
+          <Outlet context={{ data, addToCart }} />
         </main>
       </section>
     </main>

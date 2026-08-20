@@ -1,89 +1,110 @@
-import { useState } from 'react';
-import styles from '../../styles/product_info.module.css';
+import { useOutletContext, Link } from 'react-router';
+import styles from '../../styles/cart.module.css';
 
-const useCart = () => {
-  const [productsInCart, addInCart] = useState(null);
-  console.log(productsInCart);
+export default function Cart() {
+  const { cart, addToCart } = useOutletContext();
 
-  return { productsInCart, addInCart };
-};
+  const totalPrice = cart.reduce((sum, item) => {
+    return sum + item.productUrl.price * item.productQuantity;
+  }, 0);
 
-function CartInfo() {
-  return (
-    <div className={styles.product}>
-      <div className={styles.productImg}>
-        <img src={productDetails.image} alt="ProudctImg" />
+  const handleQuantityChange = (e, productId) => {
+    const newQty = Number(e.target.value);
+    if (newQty <= 0) {
+      addToCart((prev) => prev.filter((item) => item.productUrl.id !== productId));
+    } else {
+      addToCart((prev) =>
+        prev.map((item) =>
+          item.productUrl.id === productId ? { ...item, productQuantity: newQty } : item,
+        ),
+      );
+    }
+  };
+
+  const clearCart = () => addToCart([]);
+
+  if (cart.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <p className={styles.emptyText}>Your cart is empty.</p>
+        <Link to="/shop" className={styles.continueBtn}>
+          Continue Shopping
+        </Link>
       </div>
-      <div className={styles.product_info}>
-        <p className={styles.details}>{productDetails.title}</p>
-        <p className={styles.category}>{productDetails.category}</p>
-        <div className={styles.inputDiv}>
-          {/* <span>{'$' + productDetails.price}</span> */}
-          <Input setAddCart={setAddCart} productDetails={productDetails} />
+    );
+  }
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.left}>
+        <div className={styles.cartHeader}>
+          <h2 className={styles.title}>Your Cart</h2>
+          <button className={styles.clearBtn} onClick={clearCart}>
+            Clear Cart
+          </button>
+        </div>
+
+        <div className={styles.itemList}>
+          {cart.map((item) => (
+            <div className={styles.card} key={item.productUrl.id}>
+              <div className={styles.imgWrap}>
+                <img src={item.productUrl.image} alt={item.productUrl.title} />
+              </div>
+
+              <div className={styles.info}>
+                <p className={styles.itemTitle}>{item.productUrl.title}</p>
+                <p className={styles.itemCategory}>{item.productUrl.category}</p>
+
+                <div className={styles.qtyRow}>
+                  <input
+                    className={styles.qtyInput}
+                    type="number"
+                    min="0"
+                    value={item.productQuantity}
+                    onChange={(e) => handleQuantityChange(e, item.productUrl.id)}
+                  />
+                  <div className={styles.priceBlock}>
+                    <span className={styles.priceBreakdown}>
+                      ${item.productUrl.price.toFixed(2)} × {item.productQuantity}
+                    </span>
+                    <span className={styles.lineTotal}>
+                      ${(item.productUrl.price * item.productQuantity).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+
+      <aside className={styles.summary}>
+        <h3 className={styles.summaryTitle}>Order Summary</h3>
+
+        <div className={styles.summaryRow}>
+          <span>Items</span>
+          <span>${totalPrice.toFixed(2)}</span>
+        </div>
+        <div className={styles.summaryRow}>
+          <span>Shipping</span>
+          <span className={styles.free}>Free</span>
+        </div>
+
+        <div className={styles.divider} />
+
+        <div className={`${styles.summaryRow} ${styles.totalRow}`}>
+          <span>Total</span>
+          <span>${totalPrice.toFixed(2)}</span>
+        </div>
+
+        <button className={styles.checkoutBtn} disabled>
+          Proceed to Checkout
+        </button>
+
+        <Link to="/shop" className={styles.continueBtn}>
+          Continue Shopping
+        </Link>
+      </aside>
     </div>
   );
 }
-
-function Input({ productCount, addCart, setAddCart, productDetails }) {
-  const [quantity, setQuantity] = useState(productCount);
-  const { addInCart } = useCart();
-
-  const handleChange = (event) => {
-    if (event.target.value > 0) {
-      setQuantity(event.target.value);
-    } else {
-      setAddCart(false);
-    }
-  };
-
-  const iterateProduct = (productDetails, quantity) => {
-    const productIndex = cartProducts.findIndex(
-      (product) => product.productUrl.id === productDetails.id,
-    );
-
-    if (productIndex !== -1) {
-      cartProducts[productIndex].productQuantity = quantity;
-      return;
-    }
-
-    const productInfo = {
-      productUrl: productDetails,
-      productQuantity: quantity,
-    };
-    cartProducts.push(productInfo);
-  };
-
-  const onClick = () => {
-    iterateProduct(productDetails, quantity);
-    productCount = quantity;
-    addInCart(cartProducts);
-    setAddCart(false);
-  };
-
-  return (
-    <>
-      {addCart ? (
-        <div>
-          <button className={styles.addCartButton} type="button" onClick={onClick}>
-            Save items
-          </button>
-          <input className={styles.input} type="number" value={quantity} onChange={handleChange} />
-        </div>
-      ) : (
-        <button className={styles.addCartButton} type="button" onClick={() => setAddCart(true)}>
-          Add to Cart
-        </button>
-      )}
-    </>
-  );
-}
-
-export default function CartProducts() {
-  const { productsInCart } = useCart();
-
-  return <div></div>;
-}
-
-export { useCart };
